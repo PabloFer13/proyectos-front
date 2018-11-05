@@ -1,28 +1,43 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import LogIn from './containers/LogIn';
+import Register from './containers/Register';
+import Layout from './containers/Layout';
+import Routes from './routes';
+import { appActions } from './redux/actions';
 
 class App extends Component {
+  componentDidMount() {
+    const { autoLogin } = this.props;
+    autoLogin();
+  }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+    const { loggedIn, newUser } = this.props;
+    if (loggedIn) {
+      return (
+        <Layout>
+          <Routes />
+        </Layout>
+      );
+    }
+
+    return newUser ? <Register /> : <LogIn />;
   }
 }
 
-export default App;
+const mapStateToProps = ({ app }) => {
+  const { status: loggedIn, newUser } = app;
+  return { loggedIn, newUser };
+};
+
+const mapDispatchToProps = dispatch => {
+  const { autoLogin } = appActions;
+  return bindActionCreators({ autoLogin }, dispatch);
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
