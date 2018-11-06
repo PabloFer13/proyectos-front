@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { antiBind } from '../../services/utils';
 
 export const ComboboxWrapper = styled.div`
   position: relative;
-  width: 350px;
+  width: 100%;
   z-index: 100;
 `;
 
@@ -38,10 +39,12 @@ export const Combobox = ({
   inputCb,
   val,
   placeholder,
+  name,
 }) => (
   <ComboboxWrapper>
     <input
       type="text"
+      className="form-control"
       placeholder={placeholder}
       value={val}
       onChange={inputCb}
@@ -52,9 +55,52 @@ export const Combobox = ({
           {options.map(item => (
             <OptionItem
               key={`hotel-${item.id}`}
-              onClick={selectCb.bind(this, item)}
+              onClick={antiBind(
+                selectCb,
+                name,
+                item.id,
+                `${item.nombre || ''} ${item.apellidoPaterno ||
+                  ''} ${item.apellidoMaterno || ''} ${item.apellidoMaterno ||
+                  ''}`
+              )}
             >
-              {item.name}
+              {`${item.nombre || ''} ${item.apellidoPaterno ||
+                ''} ${item.apellidoMaterno || ''}`}
+            </OptionItem>
+          ))}
+        </OptionsWrapper>
+      </ComboboxMenu>
+    ) : null}
+  </ComboboxWrapper>
+);
+
+export const Combobox2 = ({
+  showMenu,
+  options,
+  selectCb,
+  inputCb,
+  val,
+  placeholder,
+  name,
+}) => (
+  <ComboboxWrapper>
+    <input
+      type="text"
+      className="form-control"
+      placeholder={placeholder}
+      value={val}
+      onChange={inputCb}
+    />
+    {showMenu ? (
+      <ComboboxMenu>
+        <OptionsWrapper>
+          {options.map(item => (
+            <OptionItem
+              key={`hotel-${item.id}`}
+              onClick={antiBind(selectCb, name, item)}
+            >
+              {`${item.nombre || ''} ${item.apellidoPaterno ||
+                ''} ${item.apellidoMaterno || ''} ${item.etiqueta || ''}`}
             </OptionItem>
           ))}
         </OptionsWrapper>

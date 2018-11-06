@@ -14,4 +14,12 @@ export default {
     create: params => axios.post('/users', params),
     get: params => axios.get('/users', { params }),
   },
+  projects: {
+    get: params => axios.get('/projects', { params }),
+    find: id => axios.get(`/projects/${id}`, {}),
+    create: params => axios.post('/projects', params),
+  },
+  tags: {
+    get: params => axios.get('/tags', { params }),
+  },
 };

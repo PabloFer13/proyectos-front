@@ -9,6 +9,12 @@ const types = [
   'SET_AUTORES',
   'GET_ASESORES',
   'SET_ASESORES',
+  'GET_PROYECTOS',
+  'SET_PROYECTOS',
+  'GET_TAGS',
+  'SET_TAGS',
+  'GET_CARRERAS',
+  'SET_CARRERAS',
 ];
 
 export const {
@@ -18,6 +24,12 @@ export const {
   setAutores,
   getAsesores,
   setAsesores,
+  getProyectos,
+  setProyectos,
+  getTags,
+  setTags,
+  getCarreras,
+  setCarreras,
 } = createActions(prefix, types);
 
 export default {
@@ -27,4 +39,10 @@ export default {
   setAutores,
   getAsesores,
   setAsesores,
+  getProyectos,
+  setProyectos,
+  getTags,
+  setTags,
+  getCarreras,
+  setCarreras,
 };

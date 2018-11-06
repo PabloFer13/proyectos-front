@@ -1,4 +1,4 @@
-import { takeLatest, put, select, call } from 'redux-saga/effects';
+import { takeLatest, put, select, call, cps } from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 import { appActions as app, userActions } from '../actions';
 import api from '../../services/api';
@@ -65,9 +65,17 @@ export function* logOutSaga() {
   yield put(push('/'));
 }
 
+export function* generarProyectoSaga({ payload }) {
+  console.log(payload);
+  const params = { ...payload };
+  yield call(api.projects.create, params);
+  yield push('/buscar');
+}
+
 export default function* appSaga() {
   yield takeLatest(app.logIn.type, logInSaga);
   yield takeLatest(app.createAccount.type, createSaga);
   yield takeLatest(app.autoLogin.type, autoLoginSaga);
   yield takeLatest(app.logOut.type, logOutSaga);
+  yield takeLatest(app.generarProyecto.type, generarProyectoSaga);
 }

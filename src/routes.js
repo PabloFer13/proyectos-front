@@ -3,14 +3,13 @@ import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router';
 import Home from './containers/Home';
 import Crear from './containers/Crear';
-import Usuarios from './containers/Usuarios';
+import Buscar from './containers/Buscar';
 
 const Routes = ({ location }) => (
   <Switch location={location}>
-    <Route exact path="/users" component={Usuarios} />
+    <Route exact path="/buscar" component={Buscar} />
     <Route exact path="/crear" component={Crear} />
-    <Route exact path="/" component={Home} />
-    <Redirect to="/" />
+    <Redirect to="/buscar" />
   </Switch>
 );
 

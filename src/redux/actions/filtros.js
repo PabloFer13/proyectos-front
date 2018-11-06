@@ -1,6 +1,6 @@
 import { createActions } from 'ractionx';
 
-const prefix = 'ucaribe/proyectos-terminales/lists';
+const prefix = 'ucaribe/proyectos-terminales/filtros';
 
 const types = [
   'CHANGE_USERS',
@@ -9,6 +9,12 @@ const types = [
   'SET_AUTORES',
   'CHANGE_ASESORES',
   'SET_ASESORES',
+  'CHANGE_NOMBRE',
+  'SET_NOMBRE',
+  'CHANGE_TAGS',
+  'SET_TAGS',
+  'CHANGE_CARRERAS',
+  'SET_CARRERAS',
 ];
 
 export const {
@@ -18,6 +24,12 @@ export const {
   setAutores,
   changeAsesores,
   setAsesores,
+  changeNombre,
+  setNombre,
+  changeTags,
+  setTags,
+  changeCarreras,
+  setCarreras,
 } = createActions(prefix, types);
 
 export default {
@@ -27,4 +39,10 @@ export default {
   setAutores,
   changeAsesores,
   setAsesores,
+  changeNombre,
+  setNombre,
+  changeTags,
+  setTags,
+  changeCarreras,
+  setCarreras,
 };

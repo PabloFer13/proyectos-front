@@ -11,6 +11,7 @@ const types = [
   'LOG_OUT',
   'SET_TOKEN',
   'AUTO_LOGIN',
+  'GENERAR_PROYECTO',
 ];
 
 export const {
@@ -22,6 +23,7 @@ export const {
   logOut,
   setToken,
   autoLogin,
+  generarProyecto,
 } = createActions(prefix, types);
 
 export default {
@@ -33,4 +35,5 @@ export default {
   logOut,
   setToken,
   autoLogin,
+  generarProyecto,
 };
