@@ -72,7 +72,10 @@ class Layout extends Component {
     const { children, logOut } = this.props;
     return (
       <AppContainer className="container-fluid">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light d-flex">
+        <nav
+          className="navbar navbar-expand-lg navbar-light bg-light d-flex"
+          style={{ marginBottom: '10px' }}
+        >
           <Link className="navbar-brand" to="/">
             Universidad del Caribe
           </Link>

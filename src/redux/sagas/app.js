@@ -66,10 +66,9 @@ export function* logOutSaga() {
 }
 
 export function* generarProyectoSaga({ payload }) {
-  console.log(payload);
   const params = { ...payload };
   yield call(api.projects.create, params);
-  yield push('/buscar');
+  yield put(push('/buscar'));
 }
 
 export default function* appSaga() {

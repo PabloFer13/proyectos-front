@@ -7,6 +7,7 @@ const initialState = {
   tags: [],
   asesores: [],
   carreras: [],
+  periodos: [],
 };
 
 export default function(state = initialState, { type, payload }) {
@@ -23,6 +24,8 @@ export default function(state = initialState, { type, payload }) {
       return { ...state, asesores: [...payload] };
     case lists.setCarreras.type:
       return { ...state, carreras: [...payload] };
+    case lists.setDates.type:
+      return { ...state, periodos: [...payload] };
     default:
       return state;
   }

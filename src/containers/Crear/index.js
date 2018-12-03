@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { filtrosActions, appActions } from '../../redux/actions';
+import { filtrosActions, appActions, listsActions } from '../../redux/actions';
 import { FormWrapper, Combobox, Combobox2 } from './Crear.styled';
 import { antiBind } from '../../services/utils';
 
@@ -15,16 +15,20 @@ class Crear extends Component {
       autores: [],
       asesor: 0,
       fecha: '',
-      url: '',
-      // carreras: [],
+      // url: '',
+      carreras: [],
     };
+    this.documentFileInput = React.createRef();
+  }
+  componentDidMount() {
+    const { getDates } = this.props;
+    getDates();
   }
   handleInput = e => {
     const { value, name } = e.target;
     this.setState({ [name]: value });
   };
   handleSelect = (e, name, element) => {
-    console.log('Entra al handle', name, element);
     this.setState(prevState => {
       const arr = prevState[name];
       if (arr.findIndex(item => item === element.id) === -1) {
@@ -36,9 +40,13 @@ class Crear extends Component {
       const { setAutores } = this.props;
       setAutores('');
     }
-    if (name === 'Tags') {
+    if (name === 'tags') {
       const { setTags } = this.props;
       setTags('');
+    }
+    if (name === 'carreras') {
+      const { setCarreras } = this.props;
+      setCarreras('');
     }
   };
   handleListButtonClick = (e, lista, element) => {
@@ -59,10 +67,21 @@ class Crear extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { generarProyecto } = this.props;
-    const { state } = this;
-    const { autores: rawAutores } = state;
+    const { autores: rawAutores, carreras: rawCarreras } = this.state;
     const autores = rawAutores.map(({ id }) => id);
-    generarProyecto({ ...state, autores });
+    const carreras = rawCarreras.map(({ id }) => id);
+    const { documentFileInput: inputRef } = this;
+    if (!(!inputRef.current.files || inputRef.current.files.length === 0)) {
+      const doc = inputRef.current.files[0];
+      generarProyecto({
+        ...this.state,
+        autores: JSON.stringify(autores),
+        carreras: JSON.stringify(carreras),
+        doc,
+      });
+    } else {
+      alert('Es necesario agregar un archivo');
+    }
   };
 
   render() {
@@ -73,7 +92,7 @@ class Crear extends Component {
       autores,
       asesor,
       fecha,
-      url,
+      //   url,
       carreras,
     } = this.state;
     const {
@@ -85,6 +104,7 @@ class Crear extends Component {
       autoresList,
       asesoresList,
       carrerasList,
+      periodosList,
       changeAsesores,
       changeAutores,
       changeCarreras,
@@ -109,14 +129,12 @@ class Crear extends Component {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="url">URL del Proyecto</label>
+                  <label htmlFor="url">Archivo del Proyecto</label>
                   <input
-                    type="text"
-                    className="form-control"
-                    name="url"
-                    value={url}
+                    type="file"
                     id="url"
-                    onChange={this.handleInput}
+                    className="form-control-file"
+                    ref={this.documentFileInput}
                   />
                 </div>
                 <div className="form-group">
@@ -138,16 +156,15 @@ class Crear extends Component {
                     value={fecha}
                     id="fecha"
                     onChange={this.handleInput}
+                    style={{ textTransform: 'capitalize' }}
                   >
-                    <option value="0">Seleccione...</option>
-                    <option value="p2015">Primavera 2015</option>
-                    <option value="v2015">Verano 2015</option>
-                    <option value="p2016">Primavera 2016</option>
-                    <option value="v2016">Verano 2016</option>
-                    <option value="p2017">Primavera 2017</option>
-                    <option value="v2017">Verano 2017</option>
-                    <option value="p2018">Primavera 2018</option>
-                    <option value="v2018">Verano 2018</option>
+                    <option value="">Seleccione...</option>
+                    {periodosList.map(item => (
+                      <option
+                        value={item.id}
+                        style={{ textTransform: 'capitalize' }}
+                      >{`${item.season} ${item.year}`}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">
@@ -182,6 +199,34 @@ class Crear extends Component {
               </div>
               <div className="col-sm-12 col-md-6">
                 <div className="form-group">
+                  <label htmlFor="tags">Carreras</label>
+                  <Combobox2
+                    showMenu={carrerasFilter.length > 0}
+                    options={carrerasList}
+                    selectCb={this.handleSelect}
+                    val={carrerasFilter}
+                    inputCb={changeCarreras}
+                    name="carreras"
+                  />
+                </div>
+                <div className="form-group d-flex align-content-between flex-wrap justify-content-around">
+                  {carreras.map(item => (
+                    <button
+                      type="button"
+                      key={`tags${item.id}`}
+                      className="btn btn-success"
+                      style={{ marginBottom: '10px' }}
+                      onClick={antiBind(
+                        this.handleListButtonClick,
+                        'carreras',
+                        item
+                      )}
+                    >
+                      {item.display}
+                    </button>
+                  ))}
+                </div>
+                <div className="form-group">
                   <label htmlFor="description">Descripcion del Proyecto</label>
                   <textarea
                     className="form-control"
@@ -202,8 +247,8 @@ class Crear extends Component {
                     name="tags"
                   />
                 </div>
-                <div className="form-group d-flex align-content-between flex-wrap justify-content-around"> */}
-                {/* {tags.map(item => (
+                <div className="form-group d-flex align-content-between flex-wrap justify-content-around">
+                  {tags.map(item => (
                     <button
                       type="button"
                       key={`tags${item.id}`}
@@ -220,7 +265,7 @@ class Crear extends Component {
                   ))}
                 </div> */}
                 <div className="form-group d-flex justify-content-end">
-                  {/* <button
+                  <button
                     className="btn btn-danger"
                     style={{ marginLeft: '5px' }}
                   >
@@ -231,7 +276,7 @@ class Crear extends Component {
                     style={{ marginLeft: '5px' }}
                   >
                     Limpiar Campos
-                  </button> */}
+                  </button>
                   <button
                     type="submit"
                     className="btn btn-primary"
@@ -257,6 +302,7 @@ const mapStateToProps = state => {
       autores: autoresList,
       asesores: asesoresList,
       carreras: carrerasList,
+      periodos: periodosList,
     },
   } = state;
 
@@ -269,6 +315,7 @@ const mapStateToProps = state => {
     autoresList,
     asesoresList,
     carrerasList,
+    periodosList,
   };
 };
 
@@ -281,7 +328,9 @@ const mapDispatchToProps = dispatch => {
     setAsesores,
     setAutores,
     setTags,
+    setCarreras,
   } = filtrosActions;
+  const { getDates } = listsActions;
   const { generarProyecto } = appActions;
   return bindActionCreators(
     {
@@ -292,7 +341,9 @@ const mapDispatchToProps = dispatch => {
       setAsesores,
       setAutores,
       setTags,
+      setCarreras,
       generarProyecto,
+      getDates,
     },
     dispatch
   );

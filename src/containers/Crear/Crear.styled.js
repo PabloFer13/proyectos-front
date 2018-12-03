@@ -26,6 +26,7 @@ export const OptionsWrapper = styled.ul`
 `;
 
 export const OptionItem = styled.li`
+  text-transform: capitalize;
   :hover {
     background-color: #18428a;
     color: #ffffff;
@@ -99,8 +100,41 @@ export const Combobox2 = ({
               key={`hotel-${item.id}`}
               onClick={antiBind(selectCb, name, item)}
             >
-              {`${item.nombre || ''} ${item.apellidoPaterno ||
-                ''} ${item.apellidoMaterno || ''} ${item.etiqueta || ''}`}
+              {`${item.nombre || ''}`}
+            </OptionItem>
+          ))}
+        </OptionsWrapper>
+      </ComboboxMenu>
+    ) : null}
+  </ComboboxWrapper>
+);
+
+export const Combobox3 = ({
+  showMenu,
+  options,
+  selectCb,
+  inputCb,
+  val,
+  placeholder,
+  name,
+}) => (
+  <ComboboxWrapper>
+    <input
+      type="text"
+      className="form-control"
+      placeholder={placeholder}
+      value={val}
+      onChange={inputCb}
+    />
+    {showMenu ? (
+      <ComboboxMenu>
+        <OptionsWrapper>
+          {options.map(item => (
+            <OptionItem
+              key={`hotel-${item.id}`}
+              onClick={antiBind(selectCb, name, item)}
+            >
+              {`${item.display}`}
             </OptionItem>
           ))}
         </OptionsWrapper>

@@ -38,10 +38,16 @@ class Buscar extends Component {
                     onChange={changeNombre}
                     placeholder="Nombre del Proyecto"
                   />
-                  {/* <select className="form-control mb-2 mr-sm-2">
-                    <option selected>Tipo de Usuario</option>
+                  <select className="form-control mb-2 mr-sm-2">
+                    <option>Periodo Escolar</option>
                     <option>...</option>
-                  </select> */}
+                  </select>
+                  <select className="form-control mb-2 mr-sm-2">
+                    <option>Carrera</option>
+                    <option>
+                      Ingenieria en logistica y cadena de suministro
+                    </option>
+                  </select>
                   <button
                     type="submit"
                     className="btn btn-primary mb-2 mr-sm-2"
@@ -49,11 +55,6 @@ class Buscar extends Component {
                     Filtrar
                   </button>
                 </form>
-              </div>
-              <div className="col d-flex justify-content-end">
-                {/* <button type="button" className="btn btn-success">
-                  Crear Usuario
-                </button> */}
               </div>
             </div>
           </FilterWrapper>
@@ -67,9 +68,9 @@ class Buscar extends Component {
                   <th scope="col">Carreras</th>
                   <th scope="col">Año</th>
                   <th scope="col">Asesor</th>
-                  <th className="text-right" scope="col">
-                    Acciones
-                  </th>
+                  <th className="text-right" scope="col" />
+                  {/* Acciones
+                  </th> */}
                 </tr>
               </thead>
               <tbody>

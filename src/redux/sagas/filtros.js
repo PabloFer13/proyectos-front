@@ -55,4 +55,5 @@ export default function* filtrosSaga() {
   yield takeLatest(filtrosActions.changeUsers, changeUsersSaga);
   yield takeLatest(filtrosActions.changeNombre, changeNombreSaga);
   yield takeLatest(filtrosActions.changeTags, changeTagsSaga);
+  yield takeLatest(filtrosActions.changeCarreras, changeCarrerasSaga);
 }

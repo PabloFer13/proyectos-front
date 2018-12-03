@@ -15,6 +15,8 @@ const types = [
   'SET_TAGS',
   'GET_CARRERAS',
   'SET_CARRERAS',
+  'GET_DATES',
+  'SET_DATES',
 ];
 
 export const {
@@ -30,6 +32,8 @@ export const {
   setTags,
   getCarreras,
   setCarreras,
+  getDates,
+  setDates,
 } = createActions(prefix, types);
 
 export default {
@@ -45,4 +49,6 @@ export default {
   setTags,
   getCarreras,
   setCarreras,
+  getDates,
+  setDates,
 };

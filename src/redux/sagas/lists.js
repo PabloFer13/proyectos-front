@@ -15,22 +15,28 @@ export function* getAsesoresSaga({ payload }) {
 }
 
 export function* getTagsSaga({ payload }) {
-  const params = {
-    etiqueta: payload,
-  };
-  const { data: tags } = yield call(api.tags.get, params);
-  yield put(listsActions.setTags(tags));
+  if (payload.length === 0) {
+    yield put(listsActions.setTags([]));
+  } else {
+    const params = {
+      etiqueta: payload,
+    };
+    const {
+      data: { tag },
+    } = yield call(api.tags.get, params);
+    console.log('**********');
+    console.log(tag);
+    console.log('**********');
+    yield put(listsActions.setTags(tag));
+  }
 }
 
 export function* getCarrerasSaga({ payload }) {
   const params = {
-    nombre: payload,
-    apellidoPaterno: payload,
-    apellidoMaterno: payload,
-    email: payload,
+    search: payload,
   };
-  const { data: users } = yield call(api.users.get, params);
-  yield put(listsActions.setCarreras(users));
+  const { data: carreras } = yield call(api.carreras.get, params);
+  yield put(listsActions.setCarreras(carreras));
 }
 
 export function* getAutoresSaga({ payload }) {
@@ -66,10 +72,19 @@ export function* getProyectosSaga() {
   yield put(listsActions.setProyectos(data));
 }
 
+export function* getDatesSaga() {
+  const {
+    data: { periodos },
+  } = yield call(api.periodos.get);
+  yield put(listsActions.setDates(periodos));
+}
+
 export default function* filtrosSaga() {
   yield takeLatest(listsActions.getAsesores, getAsesoresSaga);
   yield takeLatest(listsActions.getAutores, getAutoresSaga);
   yield takeLatest(listsActions.getUsers, getUsersSaga);
   yield takeLatest(listsActions.getProyectos, getProyectosSaga);
   yield takeLatest(listsActions.getTags, getTagsSaga);
+  yield takeLatest(listsActions.getCarreras, getCarrerasSaga);
+  yield takeLatest(listsActions.getDates, getDatesSaga);
 }
