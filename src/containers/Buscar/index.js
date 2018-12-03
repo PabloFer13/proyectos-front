@@ -1,28 +1,34 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { listsActions, filtrosActions } from '../../redux/actions';
-import { periodo } from '../../services/constants';
-import {
-  MainRow,
-  FilterWrapper,
-  TableWrapper,
-  FooterWrapper,
-} from './Buscar.styled';
+import { filtrosActions, listsActions } from '../../redux/actions';
+// import { periodo } from '../../services/constants';
+import { MainRow, FilterWrapper, TableWrapper } from './Buscar.styled';
 
 class Buscar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      periodo: 0,
+      carrera: 0,
+    };
+  }
   componentDidMount() {
-    const { getProyectos } = this.props;
+    const { getProyectos, getDates, getCarreras } = this.props;
+    getDates();
+    getCarreras();
     getProyectos();
   }
   handleSubmit = e => {
     e.preventDefault();
     const { getProyectos } = this.props;
-    getProyectos();
+    const { carrera, periodo } = this.state;
+    getProyectos({ carrera, periodo });
   };
 
   render() {
-    const { proyectos, nombre, changeNombre } = this.props;
+    const { proyectos, nombre, changeNombre, periodos, carreras } = this.props;
+    const { periodo, carrera } = this.state;
     return (
       <div>
         <MainRow className="row">
@@ -38,15 +44,27 @@ class Buscar extends Component {
                     onChange={changeNombre}
                     placeholder="Nombre del Proyecto"
                   />
-                  <select className="form-control mb-2 mr-sm-2">
-                    <option>Periodo Escolar</option>
-                    <option>...</option>
+                  <select
+                    className="form-control mb-2 mr-sm-2"
+                    style={{ textTransform: 'capitalize' }}
+                    value={periodo}
+                  >
+                    {periodos.map(item => (
+                      <option key={item.id} value={item.id}>{`${item.season} ${
+                        item.year
+                      }`}</option>
+                    ))}
                   </select>
-                  <select className="form-control mb-2 mr-sm-2">
-                    <option>Carrera</option>
-                    <option>
-                      Ingenieria en logistica y cadena de suministro
-                    </option>
+                  <select
+                    className="form-control mb-2 mr-sm-2"
+                    style={{ textTransform: 'capitalize' }}
+                    value={carrera}
+                  >
+                    {carreras.map(item => (
+                      <option key={item.id} value={item.id}>
+                        {item.display}
+                      </option>
+                    ))}
                   </select>
                   <button
                     type="submit"
@@ -78,15 +96,11 @@ class Buscar extends Component {
                   <tr>
                     <td>{item.nombre}</td>
                     <td>
-                      {item.carreras.reduce(
-                        (careerStr, carrera) =>
-                          `${careerStr} ${carrera.nombre}`,
-                        ''
-                      )}
+                      {item.carreras.map(item => (
+                        <p>{item.display}</p>
+                      ))}
                     </td>
-                    <td>{`${periodo[item.fecha[0]]} ${item.fecha[1]}${
-                      item.fecha[2]
-                    }${item.fecha[3]}${item.fecha[4]}`}</td>
+                    <td>{`${item.periodo.season} ${item.periodo.year}`}</td>
                     <td>{`${item.asesor.nombre || ''} ${item.asesor
                       .apellidoPaterno || ''} ${item.asesor.apellidoMaterno ||
                       ''}`}</td>
@@ -127,16 +141,18 @@ class Buscar extends Component {
 }
 
 const mapStateToProps = ({ lists, filtros }) => {
-  const { proyectos } = lists;
+  const { proyectos, periodos, carreras } = lists;
   const { nombre } = filtros;
-  return { proyectos, nombre };
+  return { proyectos, periodos, carreras, nombre };
 };
 
 const mapDispatchToProps = dispatch => {
-  const { getProyectos } = listsActions;
   const { changeNombre } = filtrosActions;
-
-  return bindActionCreators({ getProyectos, changeNombre }, dispatch);
+  const { getCarreras, getDates, getProyectos } = listsActions;
+  return bindActionCreators(
+    { getCarreras, getDates, getProyectos, changeNombre },
+    dispatch
+  );
 };
 
 export default connect(

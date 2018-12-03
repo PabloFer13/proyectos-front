@@ -62,14 +62,23 @@ export function* getUsersSaga({ payload }) {
   yield put(listsActions.setUsers(users));
 }
 
-export function* getProyectosSaga() {
-  const nombre = yield select(({ filtros }) => filtros.nombre);
+export function* getProyectosSaga(payload = {}) {
+  const { carrera = 0, periodo = 0 } = payload;
+  const search = yield select(({ filtros }) => filtros.nombre);
   const params = {};
-  if (nombre !== '') {
-    params.nombre = nombre;
+  if (search !== '') {
+    params.search = search;
   }
-  const { data } = yield call(api.projects.get, params);
-  yield put(listsActions.setProyectos(data));
+  if (carrera > 0) {
+    params.carrera = carrera;
+  }
+  if (periodo > 0) {
+    params.periodo = periodo;
+  }
+  const {
+    data: { projects },
+  } = yield call(api.projects.get, params);
+  yield put(listsActions.setProyectos(projects));
 }
 
 export function* getDatesSaga() {

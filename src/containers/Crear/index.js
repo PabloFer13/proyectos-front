@@ -14,7 +14,7 @@ class Crear extends Component {
       tags: [],
       autores: [],
       asesor: 0,
-      fecha: '',
+      periodo: 0,
       // url: '',
       carreras: [],
     };
@@ -64,14 +64,67 @@ class Crear extends Component {
     // Handle BAD asesor
   };
 
+  resetFields = () => {
+    const { setAsesores, setAutores, setTags, setCarreras } = this.props;
+    this.setState({
+      nombre: '',
+      description: '',
+      tags: [],
+      autores: [],
+      asesor: 0,
+      periodo: 0,
+      carreras: [],
+    });
+    setAsesores('');
+    setAutores('');
+    setTags('');
+    setCarreras('');
+  };
+
   handleSubmit = e => {
     e.preventDefault();
+
     const { generarProyecto } = this.props;
-    const { autores: rawAutores, carreras: rawCarreras } = this.state;
+    const {
+      autores: rawAutores,
+      carreras: rawCarreras,
+      periodo,
+      asesor,
+      description,
+      nombre,
+    } = this.state;
     const autores = rawAutores.map(({ id }) => id);
     const carreras = rawCarreras.map(({ id }) => id);
     const { documentFileInput: inputRef } = this;
-    if (!(!inputRef.current.files || inputRef.current.files.length === 0)) {
+    const errors = [];
+
+    if (autores.length === 0) {
+      errors.push('Autores');
+    }
+    if (carreras.length === 0) {
+      errors.push('Carreras');
+    }
+    if (periodo === 0) {
+      errors.push('Periodo');
+    }
+    if (nombre === '') {
+      errors.push('Nombre');
+    }
+    if (asesor === '') {
+      errors.push('Asesor');
+    }
+    if (description === '') {
+      errors.push('Descripcion');
+    }
+
+    if (errors.length > 0) {
+      const errString = errors.reduce(
+        (acc, item) => `${acc}${item}\n`,
+        'Faltan los siguientes campos: \n'
+      );
+    } else if (
+      !(!inputRef.current.files || inputRef.current.files.length === 0)
+    ) {
       const doc = inputRef.current.files[0];
       generarProyecto({
         ...this.state,
@@ -91,7 +144,7 @@ class Crear extends Component {
       tags,
       autores,
       asesor,
-      fecha,
+      periodo,
       //   url,
       carreras,
     } = this.state;
@@ -152,13 +205,13 @@ class Crear extends Component {
                   <label htmlFor="fecha">Fecha del Proyecto</label>
                   <select
                     className="form-control"
-                    name="fecha"
-                    value={fecha}
-                    id="fecha"
+                    name="periodo"
+                    value={periodo}
+                    id="periodo"
                     onChange={this.handleInput}
                     style={{ textTransform: 'capitalize' }}
                   >
-                    <option value="">Seleccione...</option>
+                    <option value={0}>Seleccione...</option>
                     {periodosList.map(item => (
                       <option
                         value={item.id}
@@ -268,14 +321,9 @@ class Crear extends Component {
                   <button
                     className="btn btn-danger"
                     style={{ marginLeft: '5px' }}
+                    onClick={this.resetFields}
                   >
                     Cancelar
-                  </button>
-                  <button
-                    className="btn btn-secondary"
-                    style={{ marginLeft: '5px' }}
-                  >
-                    Limpiar Campos
                   </button>
                   <button
                     type="submit"
