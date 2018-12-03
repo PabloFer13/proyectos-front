@@ -62,7 +62,7 @@ export function* getUsersSaga({ payload }) {
   yield put(listsActions.setUsers(users));
 }
 
-export function* getProyectosSaga(payload = {}) {
+export function* getProyectosSaga({ payload = {} }) {
   const { carrera = 0, periodo = 0 } = payload;
   const search = yield select(({ filtros }) => filtros.nombre);
   const params = {};
