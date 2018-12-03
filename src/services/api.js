@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// axios.defaults.baseURL = 'https://proyectos-api.herokuapp.com';
-axios.defaults.baseURL = 'http://localhost:1337';
+axios.defaults.baseURL = 'https://proyectos-api.herokuapp.com';
+// axios.defaults.baseURL = 'http://localhost:1337';
 
 const auth = token => {
   axios.defaults.params = { token };
